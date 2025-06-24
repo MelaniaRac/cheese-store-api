@@ -45,6 +45,7 @@
 	<build>
 		<plugins>
 			<plugin>
+<!--		     besides other, it also supports Maven annotations = generates the getter and setter in the decompiled class-->
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>

@@ -1,6 +1,7 @@
 package com.example.spring_boot_store_managament_api.controller;
 
 import com.example.spring_boot_store_managament_api.bean.CheeseProduct;
+import lombok.NonNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -61,7 +62,7 @@ public class CheeseController {
     @ResponseStatus(HttpStatus.CREATED)
     // RequestBody is responsible for retrieving the HTTP request body and automatically convert the JSON to the Java object
     public ResponseEntity<CheeseProduct> createCheese(@RequestBody CheeseProduct cheese){
-        System.out.println("Name of the new product: " + cheese.getCheeseName());
+        System.out.println("Name of the new product: " + cheese.getCheese());
         System.out.println("Price: " + cheese.getPrice());
 
         // we are not using "ok" method because it implies a 200 code, while the HttpStatus.CREATED is 201

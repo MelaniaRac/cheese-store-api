@@ -5,15 +5,15 @@ import lombok.*;
 //@Getter
 //@Setter
 //@EqualsAndHashCode
-//@NoArgsConstructor(force = true)
+@NoArgsConstructor(force = true)
 // @RequiredArgsConstructor
-//@AllArgsConstructor
-//@ToString(includeFieldNames = false)
-// kept some of the above annotations for my particular examples, otherwise error on constructor because Data generates only the Requested constructor
-//@Data
+@AllArgsConstructor
+@ToString(includeFieldNames = false)
+// despite @Data, kept some of the above annotations for my particular examples, otherwise error on constructor because Data generates only the Requested constructor
+@Data
 
 @Builder
-@ToString
+//@ToString
 public class CheeseProduct {
 
     // getter/setter for a certain field
