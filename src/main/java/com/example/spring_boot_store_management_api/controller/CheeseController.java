@@ -1,7 +1,6 @@
-package com.example.spring_boot_store_managament_api.controller;
+package com.example.spring_boot_store_management_api.controller;
 
-import com.example.spring_boot_store_managament_api.bean.CheeseProduct;
-import lombok.NonNull;
+import com.example.spring_boot_store_management_api.entity.CheeseProduct;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -38,7 +37,7 @@ public class CheeseController {
     }
 
     // spring boot REST API with Path Variable
-    // {name} = URI template variable -> http://localhost:1997/cheese/branzaTest
+    // {name} = URI template variable -> http://localhost:2028/cheese/branzaTest
     @GetMapping("{name}") // {name}/{secondCheeseName}
     // PathVariable for binding the URI template to the cheeseName parameter
     public ResponseEntity<CheeseProduct> cheesePathVariable(@PathVariable("name") String cheeseName){
@@ -48,7 +47,7 @@ public class CheeseController {
 
     // spring boot REST API with request parameters
     // (id=1 query parameter)
-    // http://localhost:1997/cheese-selection/query?cheeseNameRequested=branzaTest&cheesePrice=28
+    // http://localhost:2028/cheese/query?cheeseNameRequested=branzaTest&cheesePrice=28
     @GetMapping("query")
     public ResponseEntity<CheeseProduct> cheeseRequestVariable(@RequestParam String cheeseNameRequested, @RequestParam int cheesePrice){
         CheeseProduct queryCheese = new CheeseProduct(cheeseNameRequested, cheesePrice);
@@ -62,7 +61,7 @@ public class CheeseController {
     @ResponseStatus(HttpStatus.CREATED)
     // RequestBody is responsible for retrieving the HTTP request body and automatically convert the JSON to the Java object
     public ResponseEntity<CheeseProduct> createCheese(@RequestBody CheeseProduct cheese){
-        System.out.println("Name of the new product: " + cheese.getCheese());
+        System.out.println("Name of the new product: " + cheese.getCheeseName());
         System.out.println("Price: " + cheese.getPrice());
 
         // we are not using "ok" method because it implies a 200 code, while the HttpStatus.CREATED is 201
