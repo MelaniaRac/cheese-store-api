@@ -9,10 +9,9 @@ import java.math.BigDecimal;
 //@Setter
 //@EqualsAndHashCode
 @NoArgsConstructor()
-// @RequiredArgsConstructor
-@AllArgsConstructor
+@RequiredArgsConstructor
+//@AllArgsConstructor
 @ToString(includeFieldNames = false)
-// despite @Data, kept some of the above annotations for my particular examples, otherwise error on constructor because Data generates only the Required constructor
 @Data
 
 // specify this class has a JPA entity
@@ -34,12 +33,15 @@ public class CheeseProduct {
     @GeneratedValue(strategy = GenerationType.IDENTITY) // IDENTITY strategy relies on the db auto-increment column
     private int cheeseId;
 
+    @NonNull
     @Column(nullable = false)
     private String cheeseName; // String not allowed for auto_increment in MySQL => cannot use INCREMENT
 
+    @NonNull
     @Column(nullable = false)
     private BigDecimal price;
 
+    @NonNull
     private int stockUnits;
 
 }

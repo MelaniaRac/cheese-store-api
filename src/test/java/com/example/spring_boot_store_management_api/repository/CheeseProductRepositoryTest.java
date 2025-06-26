@@ -7,6 +7,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -20,18 +21,19 @@ class CheeseProductRepositoryTest {
     @Autowired
     private CheeseProductRepository cheeseProductRepository;
 
+    List<CheeseProduct> products = List.of(
+        new CheeseProduct("Selles-sur-Cher", new BigDecimal("60"), 10),
+        new CheeseProduct( "Picodon", new BigDecimal("50"), 8),
+        new CheeseProduct( "Mont d’Or", new BigDecimal("70"), 8),
+        new CheeseProduct( "Sainte-Maure de Touraine", new BigDecimal("30"), 5),
+        new CheeseProduct( "Saint-Nectaire", new BigDecimal("25.5"), 20),
+        new CheeseProduct( "Tome des Bauges", new BigDecimal("35.5"), 11)
+    );
+
     @Test
-    void addProduct(){
-        // create product
-        CheeseProduct cheese1 = new CheeseProduct();
-        cheese1.setCheeseName("Morbier");
-        cheese1.setPrice(new BigDecimal("60"));
-        cheese1.setStockUnits(10);
-        // add product
-        // uses Hibernate internally to generate primaryKey
-        CheeseProduct newProduct = cheeseProductRepository.save(cheese1);
-        // display product
-        System.out.println(newProduct.getCheeseId());
-        System.out.println(newProduct.toString());
+    void addMultipleProducts(){
+
+        cheeseProductRepository.saveAll(products);
     }
+
 }
