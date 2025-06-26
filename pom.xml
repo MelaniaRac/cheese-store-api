@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.example</groupId>
-	<artifactId>spring-boot-store-managament-api</artifactId>
+	<artifactId>spring-boot-store-management-api</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>spring-boot-store-managament-api</name>
-	<description>Store Management API</description>
+	<name>cheese-store-api</name>
+	<description>Cheese Store Management API</description>
 	<url/>
 	<licenses>
 		<license/>
@@ -43,21 +43,10 @@
 
 		<!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
 		<dependency>
-<!--		creates all Getter and Setter methods at compile time => NO MORE MANUAL-->
+<!--		creates all Getter/Setter/Equals etc. methods at compile time => NO MORE MANUAL-->
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<version>1.18.38</version>
-		</dependency>
-<!--		Dependency is duplicated in file(s): spring-boot-store-managament-api-->
-<!--		<dependency>-->
-<!--			<groupId>org.projectlombok</groupId>-->
-<!--			<artifactId>lombok</artifactId>-->
-<!--			<scope>provided</scope>-->
-<!--		</dependency>-->
-
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
 
 		<dependency>
@@ -65,6 +54,13 @@
 			<artifactId>mysql-connector-j</artifactId>
 			<scope>runtime</scope>
 		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+
+
 	</dependencies>
 
 	<build>

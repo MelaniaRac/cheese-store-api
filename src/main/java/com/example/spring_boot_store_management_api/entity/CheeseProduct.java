@@ -1,14 +1,14 @@
 package com.example.spring_boot_store_management_api.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
+
+import java.math.BigDecimal;
 
 //@Getter
 //@Setter
 //@EqualsAndHashCode
-@NoArgsConstructor(force = true)
+@NoArgsConstructor()
 // @RequiredArgsConstructor
 @AllArgsConstructor
 @ToString(includeFieldNames = false)
@@ -17,21 +17,26 @@ import lombok.*;
 
 // specify this class has a JPA entity
 @Entity
-@Table(name="cheese-products")
+@Table(name="cheese_products",
+       uniqueConstraints = {
+        //  the db itself will reject any INSERT or UPDATE that would cause two rows to share the same cheese_name
+            @UniqueConstraint(
+                    name = "unique cheese name", // the db's constraint name
+                    columnNames = "cheese_name") // column on which uniqueness in enforced
+            // we can have a list pf unique constraints here
+       })
 public class CheeseProduct {
 
-    // getter/setter for a certain field
-    // by default, lombok generates the getter/setter with 'public' modifier
-//    @Getter(AccessLevel.PRIVATE)
-//    @Setter(AccessLevel.PROTECTED)
-
-
-    //@EqualsAndHashCode.Exclude()
     //@NonNull
     @Id
-    private final String cheeseName;
-    // @ToString.Exclude
-    private final int price;
+    @Column(nullable = false)
+    //@Column(name = "nameYouWant", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // IDENTITY strategy relies on the db auto-increment column
+    private String cheeseName;
 
+    @Column(nullable = false)
+    private BigDecimal price;
+
+    private int stockUnits;
 
 }

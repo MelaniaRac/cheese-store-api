@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +18,7 @@ public class CheeseController {
     // returns a CheeseProduct object in JSON format to the client
 //    public CheeseProduct getCheeseSelection(){
       public ResponseEntity<CheeseProduct> getCheeseProduct(){
-        CheeseProduct cheese = new CheeseProduct("Burduf in coaja de brad", 39);
+        CheeseProduct cheese = new CheeseProduct("Burduf in coaja de brad", new BigDecimal("39.5"), 1);
         // configuring body of the response + the HTTP code
         // return new ResponseEntity<>(new CheeseProduct("Burduf in coaja de brad", 39), HttpStatus.OK);
         // same as
@@ -29,9 +30,9 @@ public class CheeseController {
     // returns a list of CheeseProduct object in JSON format to the client
     public ResponseEntity<List<CheeseProduct>> getCheeseList(){
         List<CheeseProduct> cheeseList = new ArrayList<>();
-        cheeseList.add(new CheeseProduct("Saint-felicien", 40));
-        cheeseList.add(new CheeseProduct("Rocamadour", 24));
-        cheeseList.add(new CheeseProduct("Cas vaca sarat", 35));
+        cheeseList.add(new CheeseProduct("Saint-felicien", new BigDecimal("40"), 2));
+        cheeseList.add(new CheeseProduct("Rocamadour", new BigDecimal("24.7"), 3));
+        cheeseList.add(new CheeseProduct("Cas vaca sarat", new BigDecimal("35.0"), 5));
 
         return ResponseEntity.ok(cheeseList);
     }
@@ -42,15 +43,15 @@ public class CheeseController {
     // PathVariable for binding the URI template to the cheeseName parameter
     public ResponseEntity<CheeseProduct> cheesePathVariable(@PathVariable("name") String cheeseName){
 
-        return new ResponseEntity<>(new CheeseProduct(cheeseName, 45), HttpStatus.OK);
+        return new ResponseEntity<>(new CheeseProduct(cheeseName, new BigDecimal("45.5"), 4), HttpStatus.OK);
     }
 
     // spring boot REST API with request parameters
     // (id=1 query parameter)
     // http://localhost:2028/cheese/query?cheeseNameRequested=branzaTest&cheesePrice=28
     @GetMapping("query")
-    public ResponseEntity<CheeseProduct> cheeseRequestVariable(@RequestParam String cheeseNameRequested, @RequestParam int cheesePrice){
-        CheeseProduct queryCheese = new CheeseProduct(cheeseNameRequested, cheesePrice);
+    public ResponseEntity<CheeseProduct> cheeseRequestVariable(@RequestParam String cheeseNameRequested, @RequestParam BigDecimal cheesePrice, @RequestParam int stockUnits){
+        CheeseProduct queryCheese = new CheeseProduct(cheeseNameRequested, cheesePrice, stockUnits);
 
         return ResponseEntity.ok(queryCheese);
     }
