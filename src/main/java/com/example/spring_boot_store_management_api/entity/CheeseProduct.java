@@ -25,14 +25,17 @@ import java.math.BigDecimal;
                     columnNames = "cheese_name") // column on which uniqueness in enforced
             // we can have a list pf unique constraints here
        })
-public class CheeseProduct {
 
+public class CheeseProduct {
     //@NonNull
     @Id
     @Column(nullable = false)
     //@Column(name = "nameYouWant", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY) // IDENTITY strategy relies on the db auto-increment column
-    private String cheeseName;
+    private int cheeseId;
+
+    @Column(nullable = false)
+    private String cheeseName; // String not allowed for auto_increment in MySQL => cannot use INCREMENT
 
     @Column(nullable = false)
     private BigDecimal price;
