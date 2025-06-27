@@ -39,6 +39,7 @@ class CheeseProductCustomAndDerivedQueriesTest {
         cheeseProductRepository.saveAll(products);
     }
 
+    // order of tests run is not known to us (although deterministic?)
     @Test
     // find product by name
     void findByName(){

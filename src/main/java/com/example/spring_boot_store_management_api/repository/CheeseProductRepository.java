@@ -27,7 +27,6 @@ public interface CheeseProductRepository extends JpaRepository<CheeseProduct, In
          * @param retailPrice maximum price (exclusive)
          * @return matching cheese products
          */
-
         public List<CheeseProduct> findByStockUnitsAndRetailPriceLessThan(int stockUnits, BigDecimal retailPrice);
 
         /**
