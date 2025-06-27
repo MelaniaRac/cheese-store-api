@@ -38,4 +38,9 @@ public class CheeseProductImpl implements CheeseProductService {
     public List<CheeseProduct> findByStockUnitsAndRetailPriceLessThan(int stockUnits, BigDecimal retailPrice) {
         return cheeseProductRepository.findByStockUnitsAndRetailPriceLessThan(stockUnits, retailPrice);
     }
+
+    @Override
+    public long deleteByStockUnits(Integer stockUnits) {
+        return cheeseProductRepository.deleteByStockUnits(stockUnits);
+    }
 }
