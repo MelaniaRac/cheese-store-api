@@ -2,6 +2,8 @@ package com.example.spring_boot_store_management_api.repository;
 
 import com.example.spring_boot_store_management_api.entity.CheeseProduct;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -32,9 +34,11 @@ public interface CheeseProductRepository extends JpaRepository<CheeseProduct, In
         /**
          * Deletes all products whose stockUnits equals a given value.
          * @param stockUnits number pf stock units
-         * @return the number of rows deelted
+         * @return the number of rows deleted
          */
-        public long deleteByStockUnits(int stockUnits);
+        @Transactional
+        @Modifying
+        public long deleteByStockUnits(Integer stockUnits);
 
 }
 
