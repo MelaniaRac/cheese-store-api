@@ -29,7 +29,7 @@ public class CheeseProduct {
     //@NonNull
     @Id
     @Column(nullable = false)
-    //@Column(name = "nameYouWant", nullab#le = false)
+    //@Column(name = "nameYouWant", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY) // IDENTITY strategy relies on the db auto-increment column
     private int cheeseId;
 
