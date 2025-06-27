@@ -5,7 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
 
 // @Repository not needed because JpaRepository already contains this annotation
 // by simply extending, our class gets all methods from JpaRepository
@@ -32,11 +31,12 @@ public interface CheeseProductRepository extends JpaRepository<CheeseProduct, In
         public List<CheeseProduct> findByStockUnitsAndRetailPriceLessThan(int stockUnits, BigDecimal retailPrice);
 
         /**
-         * Deletes all products whose stockUnits equals the given value.
+         * Deletes all products whose stockUnits equals a given value.
          * @param stockUnits number pf stock units
          * @return the number of rows deelted
          */
         public long deleteByStockUnits(int stockUnits);
+
 }
 
 
