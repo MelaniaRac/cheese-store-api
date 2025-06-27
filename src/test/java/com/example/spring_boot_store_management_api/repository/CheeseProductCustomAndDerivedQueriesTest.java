@@ -1,11 +1,11 @@
 package com.example.spring_boot_store_management_api.repository;
 
 import com.example.spring_boot_store_management_api.entity.CheeseProduct;
+// THIS import for BeforeEach
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
@@ -17,7 +17,7 @@ import java.util.List;
 // annotation to load a full application context so we can inject any spring bean in this class
 @SpringBootTest
 @Transactional
-class CustomQueriesTest {
+class CheeseProductCustomAndDerivedQueriesTest {
 
     @Autowired
     private CheeseProductRepository cheeseProductRepository;
@@ -33,9 +33,9 @@ class CustomQueriesTest {
         new CheeseProduct( "Tome des Bauges", new BigDecimal("35.5"), 1)
     );
 
-    //@BeforeEach
+    @BeforeEach
     void addMultipleProducts(){
-        //cheeseProductRepository.deleteAll();
+        cheeseProductRepository.deleteAll();
         cheeseProductRepository.saveAll(products);
     }
 
@@ -53,16 +53,38 @@ class CustomQueriesTest {
     // get products with stockUnit = 1 and retail price <= 20
         List<CheeseProduct> productStockPriceConstraint = cheeseProductRepository.findByStockUnitsAndRetailPriceLessThan(1, new BigDecimal("20"));
 
-        System.out.println(productStockPriceConstraint);
+        System.out.println("Found product that respect criteria: " + productStockPriceConstraint);
+    }
+
+    @Test
+//    Commits its transaction and leaves rows behind.
+//    Then the very next test calls the @BeforeEach deleteAll—
+//    but since you’re still inside the same Spring context (and possibly the same test execution)—
+//    that deleteAll may not actually run before the next saveAll.
+//    The result is stale rows and duplicate‐key on saveAll.
+//    @Rollback(false)
+    void updatePriceByUsingSaveMethod() {
+
+        // find entity by name
+        CheeseProduct productPriceUpdate = cheeseProductRepository.findByCheeseName("Picodon");
+        // update entity
+        productPriceUpdate.setRetailPrice(new BigDecimal(50));
+        // save/merge this entity in the table
+        cheeseProductRepository.save(productPriceUpdate);
+        // check
+        CheeseProduct productPriceVerification = cheeseProductRepository.findByCheeseName(("Picodon"));
+        System.out.println("New price of " + productPriceVerification.getCheeseName() + " is :" + productPriceVerification.getRetailPrice());
     }
 
     // considered a modifying query = require an active transaction
     @Test
-    @Rollback(value = false)
+    // commits the modification in the db table
+//    @Rollback(value = false)
     void deleteProductWithStockUnit0(){
 
         Long numberProductsDeleted = cheeseProductRepository.deleteByStockUnits(0);
         System.out.println("Number of deleted products with StockUnit=0" + numberProductsDeleted.toString());
 
     }
+
 }
