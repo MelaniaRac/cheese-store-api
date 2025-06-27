@@ -63,7 +63,7 @@ public class CheeseController {
     // RequestBody is responsible for retrieving the HTTP request body and automatically convert the JSON to the Java object
     public ResponseEntity<CheeseProduct> createCheese(@RequestBody CheeseProduct cheese){
         System.out.println("Name of the new product: " + cheese.getCheeseName());
-        System.out.println("Price: " + cheese.getPrice());
+        System.out.println("Price: " + cheese.getRetailPrice());
 
         // we are not using "ok" method because it implies a 200 code, while the HttpStatus.CREATED is 201
         return new ResponseEntity<>(cheese, HttpStatus.CREATED);
@@ -73,7 +73,7 @@ public class CheeseController {
     // maps incoming HTTP PUT request to this method
     @PutMapping("{cheeseName}/update")
     public ResponseEntity<CheeseProduct> updateCheese(@RequestBody CheeseProduct cheese, @PathVariable String cheeseName){;
-        System.out.println(cheese.getPrice());
+        System.out.println(cheese.getRetailPrice());
         // @PathVariable does not automatically populate your @RequestBody object’s fields
         // => the name of the cheese returned will be null
         return ResponseEntity.ok(cheese);
