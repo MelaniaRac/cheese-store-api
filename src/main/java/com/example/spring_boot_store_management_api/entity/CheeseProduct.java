@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 @ToString(includeFieldNames = false)
 @Data
 
-// specify this class has a JPA entity
+// specify that this class has a JPA entity
 @Entity
 @Table(name="cheese_products",
        uniqueConstraints = {

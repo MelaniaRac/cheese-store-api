@@ -1,5 +1,6 @@
 package com.example.spring_boot_store_management_api.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -8,6 +9,8 @@ import java.math.BigDecimal;
 @Getter
 @NoArgsConstructor
 @RequiredArgsConstructor
+// for the warning message
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class CheeseProductDto {
 
     // don't use sensitive information in the DTO
@@ -17,4 +20,6 @@ public class CheeseProductDto {
         @NonNull private String cheeseName;
         @NonNull private BigDecimal retailPrice;
         @NonNull private int stockUnits;
+        // to treat warnings related to service layer logic, IF any
+        private String warningMessage;
 }

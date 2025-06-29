@@ -12,11 +12,12 @@ import java.time.LocalDateTime;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
+    // @ExceptionHandler methods are called by Spring via reflection
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ErrorDetails> handleResourceNotFoundException(ResourceNotFoundException exception, WebRequest webRequest){
 
         ErrorDetails errorDetails = new ErrorDetails(
-            LocalDateTime.now(),
+                LocalDateTime.now(),
                 exception.getMessage(),
                 webRequest.getDescription(false),
                 "PRODUCT_NOT_FOUND"
