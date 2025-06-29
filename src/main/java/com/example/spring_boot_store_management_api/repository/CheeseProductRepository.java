@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 // @Repository not needed because JpaRepository already contains this annotation
 // by simply extending, our class gets all methods from JpaRepository
@@ -21,7 +22,7 @@ public interface CheeseProductRepository extends JpaRepository<CheeseProduct, In
          * @param cheeseName name to search for
          * @return matching product or empty if none found
          */
-        public CheeseProduct findByCheeseName(String cheeseName);
+        public Optional<CheeseProduct> findByCheeseName(String cheeseName);
 
         /**
          * Find all cheese products with the given stockUnits and a price below the supplied value.
@@ -39,6 +40,7 @@ public interface CheeseProductRepository extends JpaRepository<CheeseProduct, In
          */
         @Transactional
         @Modifying
+        // non-primitive value needed
         public long deleteByStockUnits(Integer stockUnits);
 
 }

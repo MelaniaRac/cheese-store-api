@@ -27,7 +27,7 @@ public interface CheeseProductService {
 
 
     /**
-     * Update the price of a product.
+     * Update ONLY the price of a product.
      *
      * @param product to update
      * @return product with new price or no modification if none found

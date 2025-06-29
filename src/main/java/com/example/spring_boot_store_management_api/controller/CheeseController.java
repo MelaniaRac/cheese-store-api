@@ -53,8 +53,10 @@ public class CheeseController {
 
     //    http://localhost:2028/cheese
     // build update price of chosen product
-    @PutMapping("{cheeseName}")
-    public ResponseEntity<CheeseProductDto> updateCheese(@RequestBody CheeseProductDto product, @PathVariable String cheeseName){
+    @PutMapping
+    // eliminated cheeseName path variable to not risk confusion if the following corner case applies:
+    // the user could write name=A in the http request and name=b in the JSON body
+    public ResponseEntity<CheeseProductDto> updateCheese(@RequestBody CheeseProductDto product){
         product.setRetailPrice(product.getRetailPrice());
         CheeseProductDto productUpdated = cheeseProductService.updateProductByPrice(product);
 
@@ -69,4 +71,7 @@ public class CheeseController {
 
         return new ResponseEntity<>("Products with stockUnits = 0 deleted:" + numberDeletedProducts, HttpStatus.OK);
     }
+
+    // custom exceptions related to the controller can also be handled inside the controller layer
+    // ex: different error formats can make it easier to localize the logic.
 }
