@@ -1,5 +1,6 @@
 package com.example.spring_boot_store_management_api.service;
 
+import com.example.spring_boot_store_management_api.dto.CheeseProductDto;
 import com.example.spring_boot_store_management_api.entity.CheeseProduct;
 
 import java.math.BigDecimal;
@@ -10,10 +11,10 @@ public interface CheeseProductService {
     /**
      * Add a product.
      *
-     * @param cheeseProduct added
+     * @param cheeseProductDto added
      * @return created product
      */
-    CheeseProduct createCheeseProduct(CheeseProduct cheeseProduct);
+    CheeseProductDto createCheeseProduct(CheeseProductDto cheeseProductDto);
 
 
     /**
@@ -22,7 +23,7 @@ public interface CheeseProductService {
      * @param cheeseName name to search for
      * @return matching product or empty if none found
      */
-    CheeseProduct findByCheeseName(String cheeseName);
+    CheeseProductDto findByCheeseName(String cheeseName);
 
 
     /**
@@ -31,7 +32,7 @@ public interface CheeseProductService {
      * @param product to update
      * @return product with new price or no modification if none found
      */
-    CheeseProduct updateProductByPrice(CheeseProduct product);
+    CheeseProductDto updateProductByPrice(CheeseProductDto product);
 
 
     /**
@@ -41,7 +42,7 @@ public interface CheeseProductService {
      * @param retailPrice maximum price (excluded)
      * @return matching cheese products
      */
-    List<CheeseProduct> findByStockUnitsAndRetailPriceLessThan(int stockUnits, BigDecimal retailPrice);
+    List<CheeseProductDto> findByStockUnitsAndRetailPriceLessThan(int stockUnits, BigDecimal retailPrice);
 
 
     /**

@@ -1,6 +1,8 @@
 package com.example.spring_boot_store_management_api.service.impl;
 
+import com.example.spring_boot_store_management_api.dto.CheeseProductDto;
 import com.example.spring_boot_store_management_api.entity.CheeseProduct;
+import com.example.spring_boot_store_management_api.mapper.CheeseProductMapper;
 import com.example.spring_boot_store_management_api.repository.CheeseProductRepository;
 import com.example.spring_boot_store_management_api.service.CheeseProductService;
 import lombok.AllArgsConstructor;
@@ -17,26 +19,39 @@ public class CheeseProductImpl implements CheeseProductService {
     private CheeseProductRepository cheeseProductRepository;
 
     @Override
-    public CheeseProduct createCheeseProduct(CheeseProduct cheeseProduct) {
-        return cheeseProductRepository.save(cheeseProduct);
+    public CheeseProductDto createCheeseProduct(CheeseProductDto cheeseProductDto) {
+        // convert cheese DTO into JPA cheese entity
+        CheeseProduct cheeseProductEntity = CheeseProductMapper.AutoCheeseProductMapper.MAPPER.mapToCheeseProduct(cheeseProductDto);
+        // save entity into a database
+        CheeseProduct savedCheeseProduct = cheeseProductRepository.save(cheeseProductEntity);
+        // convert JPA entity into Dto = bc we need to return as a response the Dto to the controller layer
+        CheeseProductDto savedCheeseProductDto = CheeseProductMapper.AutoCheeseProductMapper.MAPPER.mapToCheeseProductDto(savedCheeseProduct);
+
+        return savedCheeseProductDto;
     }
 
     @Override
-    public CheeseProduct findByCheeseName(String cheeseName) {
-        return cheeseProductRepository.findByCheeseName(cheeseName);
+    public CheeseProductDto findByCheeseName(String cheeseName) {
+        CheeseProduct cheeseProduct = cheeseProductRepository.findByCheeseName(cheeseName);
+
+        return CheeseProductMapper.AutoCheeseProductMapper.MAPPER.mapToCheeseProductDto(cheeseProduct);
     }
 
     @Override
-    public CheeseProduct updateProductByPrice(CheeseProduct product) {
+    public CheeseProductDto updateProductByPrice(CheeseProductDto product) {
+        // the set method should be used only in the controller layer
         CheeseProduct productSearched = cheeseProductRepository.findByCheeseName(product.getCheeseName());
         productSearched.setRetailPrice(product.getRetailPrice());
+        CheeseProduct productPriceUpdatedSaved = cheeseProductRepository.save(productSearched);
 
-        return cheeseProductRepository.save(productSearched);
+        return CheeseProductMapper.AutoCheeseProductMapper.MAPPER.mapToCheeseProductDto(productPriceUpdatedSaved);
     }
 
     @Override
-    public List<CheeseProduct> findByStockUnitsAndRetailPriceLessThan(int stockUnits, BigDecimal retailPrice) {
-        return cheeseProductRepository.findByStockUnitsAndRetailPriceLessThan(stockUnits, retailPrice);
+    public List<CheeseProductDto> findByStockUnitsAndRetailPriceLessThan(int stockUnits, BigDecimal retailPrice) {
+        List<CheeseProduct> cheeseProductList = cheeseProductRepository.findByStockUnitsAndRetailPriceLessThan(stockUnits, retailPrice);
+
+        return CheeseProductMapper.AutoCheeseProductMapper.MAPPER.mapToCheeseProductDto(cheeseProductList);
     }
 
     @Override

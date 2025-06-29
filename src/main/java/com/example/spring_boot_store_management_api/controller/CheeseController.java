@@ -1,5 +1,6 @@
 package com.example.spring_boot_store_management_api.controller;
 
+import com.example.spring_boot_store_management_api.dto.CheeseProductDto;
 import com.example.spring_boot_store_management_api.entity.CheeseProduct;
 import com.example.spring_boot_store_management_api.repository.CheeseProductRepository;
 import com.example.spring_boot_store_management_api.service.CheeseProductService;
@@ -24,8 +25,8 @@ public class CheeseController {
     // build create cheese product REST API
     @PostMapping("create")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<CheeseProduct> createCheeseProduct(@RequestBody CheeseProduct cheeseProduct){
-        CheeseProduct productAdded = cheeseProductService.createCheeseProduct(cheeseProduct);
+    public ResponseEntity<CheeseProductDto> createCheeseProduct(@RequestBody CheeseProductDto cheeseProductDto){
+        CheeseProductDto productAdded = cheeseProductService.createCheeseProduct(cheeseProductDto);
 
         return new ResponseEntity<>(productAdded, HttpStatus.CREATED);
     }
@@ -33,31 +34,31 @@ public class CheeseController {
 //    http://localhost:2028/cheese/Chabichou
     // build get product by CheeseName
     @GetMapping("{name}")
-    public ResponseEntity<CheeseProduct> findByCheeseName(@PathVariable("name") String cheeseName){
-        CheeseProduct productSearched = cheeseProductService.findByCheeseName(cheeseName);
+    public ResponseEntity<CheeseProductDto> findByCheeseName(@PathVariable("name") String cheeseName){
+        CheeseProductDto productSearchedDto = cheeseProductService.findByCheeseName(cheeseName);
 
-        return new ResponseEntity<>(productSearched, HttpStatus.OK);
+        return new ResponseEntity<>(productSearchedDto, HttpStatus.OK);
     }
 
-//    http://localhost:2028/cheese/Valencay
-    // build update price of chosen product
-    @PutMapping("{cheeseName}")
-    public ResponseEntity<CheeseProduct> updateCheese(@RequestBody CheeseProduct product, @PathVariable String cheeseName){
-        product.setCheeseName(cheeseName);
-        CheeseProduct productUpdated = cheeseProductService.updateProductByPrice(product);
-
-        return new ResponseEntity<>(productUpdated, HttpStatus.OK);
-
-    }
 
 //     http//localhost:2028/cheese/stockUnits/retailPrice
     // build get products by stock units and price REST API
     @GetMapping("{stockUnits}/{retailPrice}")
-    public ResponseEntity<List<CheeseProduct>> findByStockUnitsAndRetailPriceLessThan(@PathVariable int stockUnits,
+    public ResponseEntity<List<CheeseProductDto>> findByStockUnitsAndRetailPriceLessThan(@PathVariable int stockUnits,
                                                                                       @PathVariable BigDecimal retailPrice){
-        List<CheeseProduct> productsSearched= cheeseProductService.findByStockUnitsAndRetailPriceLessThan(stockUnits, retailPrice);
+        List<CheeseProductDto> productsSearched= cheeseProductService.findByStockUnitsAndRetailPriceLessThan(stockUnits, retailPrice);
 
         return new ResponseEntity<>(productsSearched, HttpStatus.OK);
+    }
+
+    //    http://localhost:2028/cheese
+    // build update price of chosen product
+    @PutMapping("{cheeseName}")
+    public ResponseEntity<CheeseProductDto> updateCheese(@RequestBody CheeseProductDto product, @PathVariable String cheeseName){
+        product.setRetailPrice(product.getRetailPrice());
+        CheeseProductDto productUpdated = cheeseProductService.updateProductByPrice(product);
+
+        return new ResponseEntity<>(productUpdated, HttpStatus.OK);
     }
 
 

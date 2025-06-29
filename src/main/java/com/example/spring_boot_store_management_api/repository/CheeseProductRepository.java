@@ -1,5 +1,6 @@
 package com.example.spring_boot_store_management_api.repository;
 
+import com.example.spring_boot_store_management_api.dto.CheeseProductDto;
 import com.example.spring_boot_store_management_api.entity.CheeseProduct;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
