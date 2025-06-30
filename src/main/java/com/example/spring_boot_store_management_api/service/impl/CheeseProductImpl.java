@@ -29,8 +29,8 @@ public class CheeseProductImpl implements CheeseProductService {
         // check if a cheese with the same name already exists
         boolean exists = cheeseProductRepository.findByCheeseName(cheeseProductDto.getCheeseName()).isPresent();
         if (exists) {
-            // ideally, should have declared a separate exception
-            throw new ResourceNotFoundException("Product", "name (already exists)", cheeseProductDto.getCheeseName());
+            // TODO replace it with "Duplicate entry" to not be misleading
+            throw new ResourceNotFoundException("Product", "name. Product already exists.");
         }
 
         // convert cheese DTO into JPA cheese entity
@@ -44,7 +44,7 @@ public class CheeseProductImpl implements CheeseProductService {
         var stockWarning = cheeseStockService.checkStock(savedCheeseProductDto.getCheeseName());
 
         if ("restock".equalsIgnoreCase(String.valueOf(stockWarning))){
-            savedCheeseProductDto.setWarningMessage("⚠️ Warning: Stock is low (below 4 units). Consider restocking.");
+            savedCheeseProductDto.setWarningMessage("⚠️ Warning: Stock is low. Consider restocking.");
         }
 
         return savedCheeseProductDto;
@@ -54,7 +54,7 @@ public class CheeseProductImpl implements CheeseProductService {
     public CheeseProductDto findByCheeseName(String cheeseName) {
         var cheeseProduct = cheeseProductRepository.findByCheeseName(cheeseName).orElseThrow(
                 // implement supplier functional interface
-                () -> new ResourceNotFoundException("Product", "name", cheeseName)
+                () -> new ResourceNotFoundException("Product", "name")
         );
 
         return CheeseProductMapper.AutoCheeseProductMapper.MAPPER.mapToCheeseProductDto(cheeseProduct);
@@ -66,7 +66,7 @@ public class CheeseProductImpl implements CheeseProductService {
         List<CheeseProduct> cheeseProductList = cheeseProductRepository.findByStockUnitsAndRetailPriceLessThan(stockUnits, retailPrice);
 
         if(cheeseProductList.isEmpty()){
-            throw new ResourceNotFoundException("Product", "criteria", "stock units = " + stockUnits + " and " + "price lower than " + retailPrice.toString());
+            throw new ResourceNotFoundException("Product", "criteria");
         }
 
         return CheeseProductMapper.AutoCheeseProductMapper.MAPPER.mapToCheeseProductDto(cheeseProductList);
@@ -78,7 +78,7 @@ public class CheeseProductImpl implements CheeseProductService {
     // then, it populates the DTO and send it to this function
     public CheeseProductDto updateProductByPrice(CheeseProductDto productDto) {
         var productSearched = cheeseProductRepository.findByCheeseName(productDto.getCheeseName()).orElseThrow(
-                () -> new ResourceNotFoundException("Product", "name", productDto.getCheeseName())
+                () -> new ResourceNotFoundException("Product", "name")
                 );
 
 //        // Only price can be changed
@@ -102,7 +102,7 @@ public class CheeseProductImpl implements CheeseProductService {
         var numberDeletedRows = cheeseProductRepository.deleteByStockUnits(stockUnits);
 
         if (numberDeletedRows == 0) {
-            throw new ResourceNotFoundException("Product", "stock units", stockUnits.toString());
+            throw new ResourceNotFoundException("Product", "stock units.");
         }
 
         return numberDeletedRows;

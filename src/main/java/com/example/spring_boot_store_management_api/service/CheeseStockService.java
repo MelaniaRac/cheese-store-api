@@ -26,7 +26,7 @@ import org.springframework.stereotype.Service;
         public StockLevel checkStock(String cheeseName) {
             // Java 17 feature var (infers local variable types)
             var product = cheeseProductRepository.findByCheeseName(cheeseName)
-                    .orElseThrow(() -> new ResourceNotFoundException("Product", "name", cheeseName));
+                    .orElseThrow(() -> new ResourceNotFoundException("Product", "name"));
 
             // I overdid it just to play with java 17, could have just used ternary operator
             int stockVerification = (product.getStockUnits() <= RESTOCK_THRESHOLD) ? 0 : 1;
