@@ -7,6 +7,7 @@ import com.example.spring_boot_store_management_api.service.CheeseProductService
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -25,6 +26,7 @@ public class CheeseController {
     // build create cheese product REST API
     @PostMapping("create")
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<CheeseProductDto> createCheeseProduct(@RequestBody CheeseProductDto cheeseProductDto){
         CheeseProductDto productAdded = cheeseProductService.createCheeseProduct(cheeseProductDto);
 
@@ -34,6 +36,7 @@ public class CheeseController {
 //    http://localhost:2028/cheese/Chabichou
     // build get product by CheeseName
     @GetMapping("{name}")
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
     public ResponseEntity<CheeseProductDto> findByCheeseName(@PathVariable("name") String cheeseName){
         CheeseProductDto productSearchedDto = cheeseProductService.findByCheeseName(cheeseName);
 
@@ -44,6 +47,7 @@ public class CheeseController {
 //     http//localhost:2028/cheese/stockUnits/retailPrice
     // build get products by stock units and price REST API
     @GetMapping("{stockUnits}/{retailPrice}")
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
     public ResponseEntity<List<CheeseProductDto>> findByStockUnitsAndRetailPriceLessThan(@PathVariable int stockUnits,
                                                                                       @PathVariable BigDecimal retailPrice){
         List<CheeseProductDto> productsSearched= cheeseProductService.findByStockUnitsAndRetailPriceLessThan(stockUnits, retailPrice);
@@ -54,6 +58,7 @@ public class CheeseController {
     //    http://localhost:2028/cheese
     // build update price of chosen product
     @PutMapping
+    @PreAuthorize("hasAnyRole('ADMIN')")
     // eliminated cheeseName path variable to not risk confusion if the following corner case applies:
     // the user could write name=A in the http request and name=b in the JSON body
     public ResponseEntity<CheeseProductDto> updateCheese(@RequestBody CheeseProductDto product){
@@ -66,6 +71,7 @@ public class CheeseController {
 
     // build delete product REST API
     @DeleteMapping("{stockUnits}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> deleteByStockUnits(@PathVariable("stockUnits") Integer stockUnits){
         long numberDeletedProducts = cheeseProductService.deleteByStockUnits(stockUnits);
 

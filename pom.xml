@@ -69,6 +69,12 @@
 			<version>${org.mapstruct.version}</version>
 		</dependency>
 
+		<!--		framework that provides built in support for authentication and authorization-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+
 	</dependencies>
 
 	<build>
