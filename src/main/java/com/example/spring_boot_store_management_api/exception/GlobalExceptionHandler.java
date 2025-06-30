@@ -19,7 +19,7 @@ public class GlobalExceptionHandler {
         ErrorDetails errorDetails = new ErrorDetails(
                 LocalDateTime.now(),
                 exception.getMessage(),
-                webRequest.getDescription(false),
+                //webRequest.getDescription(false),
                 "PRODUCT_NOT_FOUND"
         );
 

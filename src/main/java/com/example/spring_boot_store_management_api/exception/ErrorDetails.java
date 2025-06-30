@@ -15,7 +15,8 @@ public class ErrorDetails {
 
     private LocalDateTime timestamp;
     private String message;
-    private String path;
+    // eliminate for security reasons
+    //private String path;
     private String errorCode;
 
 }
