@@ -69,7 +69,7 @@ public class CheeseController {
     public ResponseEntity<String> deleteByStockUnits(@PathVariable("stockUnits") Integer stockUnits){
         long numberDeletedProducts = cheeseProductService.deleteByStockUnits(stockUnits);
 
-        return new ResponseEntity<>("Products with stockUnits = 0 deleted:" + numberDeletedProducts, HttpStatus.OK);
+        return new ResponseEntity<>("Products out of stock were deleted:", HttpStatus.OK);
     }
 
     // custom exceptions related to the controller can also be handled inside the controller layer
