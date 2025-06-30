@@ -1,6 +1,5 @@
 package com.example.spring_boot_store_management_api.service;
 
-import com.example.spring_boot_store_management_api.entity.CheeseProduct;
 import com.example.spring_boot_store_management_api.exception.ResourceNotFoundException;
 import com.example.spring_boot_store_management_api.repository.CheeseProductRepository;
 import lombok.AllArgsConstructor;
@@ -13,6 +12,9 @@ import org.springframework.stereotype.Service;
         private final CheeseProductRepository cheeseProductRepository;
         private static final int RESTOCK_THRESHOLD = 3;
 
+        // just to play with java 17
+        enum StockLevel { RESTOCK, SUFFICIENT }
+
         /**
          * Check how many units are left for the given product.
          *
@@ -21,13 +23,19 @@ import org.springframework.stereotype.Service;
          *         "sufficient stock" when the number of units is equal or greater than the specified number
          *         or the ResourceNotFound exception
          */
-        public String checkStock(String cheeseName) {
-            CheeseProduct product = cheeseProductRepository.findByCheeseName(cheeseName)
+        public StockLevel checkStock(String cheeseName) {
+            // Java 17 feature var (infers local variable types)
+            var product = cheeseProductRepository.findByCheeseName(cheeseName)
                     .orElseThrow(() -> new ResourceNotFoundException("Product", "name", cheeseName));
 
-            int units = product.getStockUnits();
+            // I overdid it just to play with java 17, could have just used ternary operator
+            int stockVerification = (product.getStockUnits() <= RESTOCK_THRESHOLD) ? 0 : 1;
 
-            return units <= RESTOCK_THRESHOLD ? "restock" : "sufficient stock";
+            return switch (stockVerification) {
+                case 0 -> StockLevel.RESTOCK;
+                case 1 -> StockLevel.SUFFICIENT;
+                default -> throw new IllegalStateException("Unexpected value: " + stockVerification);
+            };
         }
     }
 

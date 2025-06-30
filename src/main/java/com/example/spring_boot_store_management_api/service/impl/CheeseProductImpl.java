@@ -2,7 +2,6 @@ package com.example.spring_boot_store_management_api.service.impl;
 
 import com.example.spring_boot_store_management_api.dto.CheeseProductDto;
 import com.example.spring_boot_store_management_api.entity.CheeseProduct;
-import com.example.spring_boot_store_management_api.exception.InvalidUpdateException;
 import com.example.spring_boot_store_management_api.exception.ResourceNotFoundException;
 import com.example.spring_boot_store_management_api.mapper.CheeseProductMapper;
 import com.example.spring_boot_store_management_api.repository.CheeseProductRepository;
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -28,6 +26,13 @@ public class CheeseProductImpl implements CheeseProductService {
 
     @Override
     public CheeseProductDto createCheeseProduct(CheeseProductDto cheeseProductDto) {
+        // check if a cheese with the same name already exists
+        boolean exists = cheeseProductRepository.findByCheeseName(cheeseProductDto.getCheeseName()).isPresent();
+        if (exists) {
+            // ideally, should have declared a separate exception
+            throw new ResourceNotFoundException("Product", "name (already exists)", cheeseProductDto.getCheeseName());
+        }
+
         // convert cheese DTO into JPA cheese entity
         CheeseProduct cheeseProductEntity = CheeseProductMapper.AutoCheeseProductMapper.MAPPER.mapToCheeseProduct(cheeseProductDto);
         // save entity into a database
@@ -36,9 +41,9 @@ public class CheeseProductImpl implements CheeseProductService {
         CheeseProductDto savedCheeseProductDto = CheeseProductMapper.AutoCheeseProductMapper.MAPPER.mapToCheeseProductDto(savedCheeseProduct);
 
         // check if the stock for the added product is below the threshold
-        String stockWarning = cheeseStockService.checkStock(savedCheeseProductDto.getCheeseName());
+        var stockWarning = cheeseStockService.checkStock(savedCheeseProductDto.getCheeseName());
 
-        if ("restock".equalsIgnoreCase(stockWarning)) {
+        if ("restock".equalsIgnoreCase(String.valueOf(stockWarning))){
             savedCheeseProductDto.setWarningMessage("⚠️ Warning: Stock is low (below 4 units). Consider restocking.");
         }
 
@@ -47,7 +52,7 @@ public class CheeseProductImpl implements CheeseProductService {
 
     @Override
     public CheeseProductDto findByCheeseName(String cheeseName) {
-        CheeseProduct cheeseProduct = cheeseProductRepository.findByCheeseName(cheeseName).orElseThrow(
+        var cheeseProduct = cheeseProductRepository.findByCheeseName(cheeseName).orElseThrow(
                 // implement supplier functional interface
                 () -> new ResourceNotFoundException("Product", "name", cheeseName)
         );
@@ -72,7 +77,7 @@ public class CheeseProductImpl implements CheeseProductService {
     // Jackson parses the JSON to the DTO object, matches the JSON keys to the DTO's
     // then, it populates the DTO and send it to this function
     public CheeseProductDto updateProductByPrice(CheeseProductDto productDto) {
-        CheeseProduct productSearched = cheeseProductRepository.findByCheeseName(productDto.getCheeseName()).orElseThrow(
+        var productSearched = cheeseProductRepository.findByCheeseName(productDto.getCheeseName()).orElseThrow(
                 () -> new ResourceNotFoundException("Product", "name", productDto.getCheeseName())
                 );
 
@@ -86,7 +91,7 @@ public class CheeseProductImpl implements CheeseProductService {
 
         // the set method should be used only in the controller layer
         productSearched.setRetailPrice(productDto.getRetailPrice());
-        CheeseProduct productPriceUpdatedSaved = cheeseProductRepository.save(productSearched);
+        var productPriceUpdatedSaved = cheeseProductRepository.save(productSearched);
 
         return CheeseProductMapper.AutoCheeseProductMapper.MAPPER.mapToCheeseProductDto(productPriceUpdatedSaved);
     }
@@ -94,7 +99,7 @@ public class CheeseProductImpl implements CheeseProductService {
 
     @Override
     public long deleteByStockUnits(Integer stockUnits) {
-        Long numberDeletedRows = cheeseProductRepository.deleteByStockUnits(stockUnits);
+        var numberDeletedRows = cheeseProductRepository.deleteByStockUnits(stockUnits);
 
         if (numberDeletedRows == 0) {
             throw new ResourceNotFoundException("Product", "stock units", stockUnits.toString());

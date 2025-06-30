@@ -5,6 +5,7 @@ import lombok.*;
 
 import java.math.BigDecimal;
 
+// could have made it a record instead of a class using Lombok (check a advantages first)
 @Setter
 @Getter
 @NoArgsConstructor

@@ -12,6 +12,7 @@ public class ResourceNotFoundException extends RuntimeException{
     private String fieldName; // resource element of interest to the user
     private String fieldValue; // the value of the resource element
 
+    // do not give too many details in the error message that would
     public ResourceNotFoundException(String resourceName, String fieldName, String fieldValue){
         super(String.format("%s not found with %s : '%s' ", resourceName, fieldName, fieldValue));
         this.resourceName = resourceName;
