@@ -1,4 +1,4 @@
-package com.example.spring_boot_store_management_api.service;
+package com.example.spring_boot_store_management_api.service.impl;
 
 import com.example.spring_boot_store_management_api.exception.ResourceNotFoundException;
 import com.example.spring_boot_store_management_api.repository.CheeseProductRepository;
@@ -7,13 +7,13 @@ import org.springframework.stereotype.Service;
 
     @Service
     @AllArgsConstructor
-    public class CheeseStockService {
+    public class CheeseStockServiceImpl {
 
         private final CheeseProductRepository cheeseProductRepository;
         private static final int RESTOCK_THRESHOLD = 3;
 
         // just to play with java 17
-        enum StockLevel { RESTOCK, SUFFICIENT }
+        public enum StockLevel { RESTOCK, SUFFICIENT }
 
         /**
          * Check how many units are left for the given product.

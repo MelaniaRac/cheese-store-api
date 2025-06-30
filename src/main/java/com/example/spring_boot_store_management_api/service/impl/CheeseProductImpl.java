@@ -6,7 +6,6 @@ import com.example.spring_boot_store_management_api.exception.ResourceNotFoundEx
 import com.example.spring_boot_store_management_api.mapper.CheeseProductMapper;
 import com.example.spring_boot_store_management_api.repository.CheeseProductRepository;
 import com.example.spring_boot_store_management_api.service.CheeseProductService;
-import com.example.spring_boot_store_management_api.service.CheeseStockService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,16 +21,17 @@ public class CheeseProductImpl implements CheeseProductService {
     // now I added another one, so ...Autowired
     @Autowired
     private CheeseProductRepository cheeseProductRepository;
-    private CheeseStockService cheeseStockService;
+    private CheeseStockServiceImpl cheeseStockServiceImpl;
 
     @Override
     public CheeseProductDto createCheeseProduct(CheeseProductDto cheeseProductDto) {
         // check if a cheese with the same name already exists
         boolean exists = cheeseProductRepository.findByCheeseName(cheeseProductDto.getCheeseName()).isPresent();
         if (exists) {
-            // TODO replace it with "Duplicate entry" to not be misleading
+            // "TODOo" replace it with "Duplicate entry" to not be misleading
             throw new ResourceNotFoundException("Product", "name. Product already exists.");
         }
+        // "TODOo" @Positive validation for price and stockUnits
 
         // convert cheese DTO into JPA cheese entity
         CheeseProduct cheeseProductEntity = CheeseProductMapper.AutoCheeseProductMapper.MAPPER.mapToCheeseProduct(cheeseProductDto);
@@ -41,7 +41,7 @@ public class CheeseProductImpl implements CheeseProductService {
         CheeseProductDto savedCheeseProductDto = CheeseProductMapper.AutoCheeseProductMapper.MAPPER.mapToCheeseProductDto(savedCheeseProduct);
 
         // check if the stock for the added product is below the threshold
-        var stockWarning = cheeseStockService.checkStock(savedCheeseProductDto.getCheeseName());
+        var stockWarning = cheeseStockServiceImpl.checkStock(savedCheeseProductDto.getCheeseName());
 
         if ("restock".equalsIgnoreCase(String.valueOf(stockWarning))){
             savedCheeseProductDto.setWarningMessage("⚠️ Warning: Stock is low. Consider restocking.");
@@ -81,6 +81,8 @@ public class CheeseProductImpl implements CheeseProductService {
                 () -> new ResourceNotFoundException("Product", "name")
                 );
 
+        // "TODOo" @Positive validation for price and stockUnits
+        // "TODOo" update price without being allowed to update cheese name and stock Units at the same time
 //        // Only price can be changed
 //        if (productSearched.getCheeseName() != productDto.getCheeseName()) {
 //            throw new InvalidUpdateException("You cannot change the cheese name. Only the price can be changed.");
