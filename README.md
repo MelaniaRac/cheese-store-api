@@ -60,7 +60,7 @@ JUnit tests with Mockito cover service and stock logic.
 
 ## Future Work
 
-- Introduce an `Order` entity to capture purchases of cheese products, including
+- Work in Progress (see latest commits): Introduce an `Order` entity to capture purchases of cheese products, including
   quantity, order date and total cost + service method for sales/day
 
 ## Resources

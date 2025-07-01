@@ -1,5 +1,6 @@
 package com.example.spring_boot_store_management_api.service.impl;
 
+import com.example.spring_boot_store_management_api.dto.OrderCreateDto;
 import com.example.spring_boot_store_management_api.dto.OrderDto;
 import com.example.spring_boot_store_management_api.entity.CheeseProduct;
 import com.example.spring_boot_store_management_api.entity.Order;
@@ -22,12 +23,12 @@ public class OrderImpl implements OrderService {
 
 
     @Override
-    public OrderDto createOrder(OrderDto orderDto, String deliveryAddress){
+    public OrderCreateDto createOrder(OrderCreateDto orderCreateDto){
 
         BigDecimal total = BigDecimal.ZERO;
 
-        Order order = OrderMapper.AutoOrderMapper.MAPPER.mapToOrder(orderDto);
-        order.setDeliveryAddress(deliveryAddress);
+        Order order = OrderMapper.AutoOrderMapper.MAPPER.mapToOrder(orderCreateDto);
+        order.setDeliveryAddress(order.getDeliveryAddress());
 
         for (var item : order.getOrderedProducts()) {
             // the 'might throw NullPointer' for findCheeseName is IDE-level caution, not compiler error
@@ -51,7 +52,7 @@ public class OrderImpl implements OrderService {
 
         Order savedOrder = orderRepository.save(order);
 
-        return OrderMapper.AutoOrderMapper.MAPPER.mapToOrderDto(savedOrder);
+        return OrderMapper.AutoOrderMapper.MAPPER.mapToOrderCreateDto(savedOrder);
     }
 
 

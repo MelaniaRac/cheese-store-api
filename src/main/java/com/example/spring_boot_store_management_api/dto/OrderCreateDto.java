@@ -16,8 +16,8 @@ import java.util.List;
 @NoArgsConstructor
 @RequiredArgsConstructor
 
-// DTO for returning order details to admin
-public class OrderDto {
+// DTO for receiving order input from users
+public class OrderCreateDto {
     // DTO is only the carrier, no need for these annotations here
 //    @Id
 //    @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,4 +28,8 @@ public class OrderDto {
     private LocalDate orderDate;// to be used for service function revenuePerDay
     @NonNull
     private List<OrderItem> orderedProducts;
+
+    @NonNull
+    // for USER it is not sensitive information
+    private String deliveryAddress;
 }

@@ -1,6 +1,7 @@
 package com.example.spring_boot_store_management_api.mapper;
 
 import com.example.spring_boot_store_management_api.dto.CheeseProductDto;
+import com.example.spring_boot_store_management_api.dto.OrderCreateDto;
 import com.example.spring_boot_store_management_api.dto.OrderDto;
 import com.example.spring_boot_store_management_api.entity.CheeseProduct;
 import com.example.spring_boot_store_management_api.entity.Order;
@@ -15,14 +16,13 @@ public class OrderMapper {
 
         OrderMapper.AutoOrderMapper MAPPER = Mappers.getMapper(OrderMapper.AutoOrderMapper.class);
 
+        // will be used for Get order, where the sensitive address info for ADMIN and USER wil be hidden
         OrderDto mapToOrderDto(Order order);
 
         Order mapToOrder(OrderDto orderDto);
 
-        default List<OrderDto> mapToOrderDto(List<Order> orders) {
-            return orders.stream()
-                    .map(this::mapToOrderDto)
-                    .collect(Collectors.toList());
-        }
+        Order mapToOrder(OrderCreateDto orderCreateDto);
+
+        OrderCreateDto mapToOrderCreateDto(Order order);
     }
 }
