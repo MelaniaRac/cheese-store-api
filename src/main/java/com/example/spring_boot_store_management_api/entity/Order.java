@@ -30,6 +30,7 @@ public class Order {
     private String deliveryAddress;
 
     // order contains a collection of orderItem elements
+    @NonNull
     @ElementCollection // collection of value types, not entities
     @CollectionTable(name = "ordered_items", joinColumns = @JoinColumn(name = "order_id"))
     private List<OrderItem> orderedProducts;

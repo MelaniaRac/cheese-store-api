@@ -53,6 +53,10 @@ public class CheeseProductImpl implements CheeseProductService {
     @Override
     public CheeseProductDto findByCheeseName(String cheeseName) {
         var cheeseProduct = cheeseProductRepository.findByCheeseName(cheeseName).orElseThrow(
+//                JPA can’t guarantee that a product with this name exists
+//                => instead of returning null, which can easily cause NullPointerExceptions,
+//                it wraps the result in Optional
+
                 // implement supplier functional interface
                 () -> new ResourceNotFoundException("Product", "name")
         );
@@ -75,7 +79,7 @@ public class CheeseProductImpl implements CheeseProductService {
 
     @Override
     // Jackson parses the JSON to the DTO object, matches the JSON keys to the DTO's
-    // then, it populates the DTO and send it to this function
+    // then, it populates the DTO and sends it to this function
     public CheeseProductDto updateProductByPrice(CheeseProductDto productDto) {
         var productSearched = cheeseProductRepository.findByCheeseName(productDto.getCheeseName()).orElseThrow(
                 () -> new ResourceNotFoundException("Product", "name")
