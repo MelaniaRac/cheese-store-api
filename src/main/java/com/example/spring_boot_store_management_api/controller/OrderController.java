@@ -22,9 +22,10 @@ public class OrderController {
 
     private OrderService orderService;
 
-    // http://localhost:2028/orders/create?address=...
+    // This method is a step towards extending the app to interaction with end user as well.
+    // http://localhost:2028/orders/create
     @PostMapping("create")
-    @PreAuthorize("hasRole('USER')")
+//    @PreAuthorize("hasRole('USER')")
     @ResponseStatus(HttpStatus.CREATED)
     // modified the method params so that the end user can see his address in the creation response message
     public ResponseEntity<OrderCreateDto> createOrder(@RequestBody OrderCreateDto orderCreateDto) {

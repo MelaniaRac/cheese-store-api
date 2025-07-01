@@ -10,11 +10,15 @@ import com.example.spring_boot_store_management_api.repository.CheeseProductRepo
 import com.example.spring_boot_store_management_api.repository.OrderRepository;
 import com.example.spring_boot_store_management_api.service.CheeseProductService;
 import com.example.spring_boot_store_management_api.service.OrderService;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
+@Service
+@AllArgsConstructor
 public class OrderImpl implements OrderService {
 
     OrderRepository orderRepository = null;

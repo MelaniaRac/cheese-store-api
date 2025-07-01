@@ -2,7 +2,6 @@ package com.example.spring_boot_store_management_api.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.Id;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -19,9 +18,13 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int orderId;
 
+    // field that should not be provided by end user; it should be automatically generated
+    // TODOo: modify RequestBody in createOrder OR modify OrderCreateDTO
     @NonNull
     private BigDecimal totalValue;
 
+    // field that should not be provided by end user; it should be automatically generated
+    // TODOo: modify RequestBody in createOrder OR modify OrderCreateDTO
     @NonNull
     private LocalDate orderDate;// to be used for service function revenuePerDay
 
