@@ -23,7 +23,7 @@ public interface CheeseProductService {
      * @param cheeseName name to search for
      * @return matching product or empty if none found
      */
-    CheeseProductDto findByCheeseName(String cheeseName);
+    CheeseProductDto findCheese(String cheeseName);
 
 
     /**
@@ -32,6 +32,8 @@ public interface CheeseProductService {
      * @param product to update
      * @return product with new price or no modification if none found
      */
+
+    // TODOo why not declared in repository as well?
     CheeseProductDto updateProductByPrice(CheeseProductDto product);
 
 

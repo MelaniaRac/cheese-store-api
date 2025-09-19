@@ -1,10 +1,10 @@
 package com.example.spring_boot_store_management_api.service.impl;
 
 import com.example.spring_boot_store_management_api.dto.OrderCreateDto;
-import com.example.spring_boot_store_management_api.dto.OrderDto;
 import com.example.spring_boot_store_management_api.entity.CheeseProduct;
 import com.example.spring_boot_store_management_api.entity.Order;
-import com.example.spring_boot_store_management_api.exception.ResourceNotFoundException;
+import com.example.spring_boot_store_management_api.exception.OutOfStockException;
+import com.example.spring_boot_store_management_api.exception.ProductNotFoundException;
 import com.example.spring_boot_store_management_api.mapper.OrderMapper;
 import com.example.spring_boot_store_management_api.repository.CheeseProductRepository;
 import com.example.spring_boot_store_management_api.repository.OrderRepository;
@@ -31,24 +31,31 @@ public class OrderImpl implements OrderService {
 
         BigDecimal total = BigDecimal.ZERO;
 
+        // the OrderItemDto elements inside the orderCreateDto list are automatically mapped to orderItem
+        // because of the structure of Order and OrderItem
         Order order = OrderMapper.AutoOrderMapper.MAPPER.mapToOrder(orderCreateDto);
         order.setDeliveryAddress(order.getDeliveryAddress());
 
         for (var item : order.getOrderedProducts()) {
             // the 'might throw NullPointer' for findCheeseName is IDE-level caution, not compiler error
-            CheeseProduct product = cheeseProductRepository.findByCheeseName(item.getCheeseName())
-                    .orElseThrow(() -> new ResourceNotFoundException("Product", "name"));
-            // TODOo make units from order impossible to be greater than stockUnits
-            if (item.getUnits() > product.getStockUnits()){
-                throw new IllegalArgumentException(
-                        "Requested units exceed available stock for " + product.getCheeseName()
+            // TODOo: is it a better practice to look by id instead of cheeseName
+            // -> faster DB search, names are not necessarily unique
+            // after I create the front end that translates names into IDs
+            CheeseProduct product = cheeseProductRepository.findByCheeseNameIgnoreCase(item.getCheeseName())
+                    .orElseThrow(() -> new ProductNotFoundException("Product", "name"));
+
+            if (item.getOrderedUnits() > product.getStockUnits()){
+                throw new OutOfStockException(
+                        // TODOo the equal case not correctly treated
+                        product.getCheeseName()
                 );
             }
-            product.setStockUnits(product.getStockUnits() - item.getUnits());
+            product.setStockUnits(product.getStockUnits() - item.getOrderedUnits());
             cheeseProductRepository.save(product);
             cheeseProductStock.checkStock(product.getCheeseName());
 
-            total = total.add(item.getPrice().multiply(BigDecimal.valueOf(item.getUnits())));
+
+            total = total.add(product.getRetailPrice().multiply(BigDecimal.valueOf(item.getOrderedUnits())));
         }
 
         order.setTotalValue(total);

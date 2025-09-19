@@ -26,7 +26,6 @@ public class CheeseController {
     // build create cheese product REST API
     @PostMapping("create")
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<CheeseProductDto> createCheeseProduct(@RequestBody CheeseProductDto cheeseProductDto){
         CheeseProductDto productAdded = cheeseProductService.createCheeseProduct(cheeseProductDto);
 
@@ -34,11 +33,11 @@ public class CheeseController {
     }
 
 //    http://localhost:2028/cheese/Chabichou
-    // build get product by CheeseName
+    // build get product by cheeseName
     @GetMapping("{name}")
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
     public ResponseEntity<CheeseProductDto> findByCheeseName(@PathVariable("name") String cheeseName){
-        CheeseProductDto productSearchedDto = cheeseProductService.findByCheeseName(cheeseName);
+        CheeseProductDto productSearchedDto = cheeseProductService.findCheese(cheeseName);
 
         return new ResponseEntity<>(productSearchedDto, HttpStatus.OK);
     }
@@ -46,11 +45,12 @@ public class CheeseController {
 
 //     http//localhost:2028/cheese/stockUnits/retailPrice
     // build get products by stock units and price REST API
+    // TODOo : make the URL using query parameters
     @GetMapping("{stockUnits}/{retailPrice}")
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
-    public ResponseEntity<List<CheeseProductDto>> findByStockUnitsAndRetailPriceLessThan(@PathVariable int stockUnits,
-                                                                                      @PathVariable BigDecimal retailPrice){
-        List<CheeseProductDto> productsSearched= cheeseProductService.findByStockUnitsAndRetailPriceLessThan(stockUnits, retailPrice);
+    public ResponseEntity<List<CheeseProductDto>> findByStockUnitsAndRetailPriceLessThan(Integer stockUnits,
+                                                                                      BigDecimal retailPrice){
+        List<CheeseProductDto> productsSearched= cheeseProductService.findByStockUnitsAndRetailPriceLessThan((Integer) stockUnits, (BigDecimal) retailPrice);
 
         return new ResponseEntity<>(productsSearched, HttpStatus.OK);
     }
@@ -58,7 +58,7 @@ public class CheeseController {
     //    http://localhost:2028/cheese
     // build update price of chosen product
     @PutMapping
-    @PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     // eliminated cheeseName path variable to not risk confusion if the following corner case applies:
     // the user could write name=A in the http request and name=b in the JSON body
     public ResponseEntity<CheeseProductDto> updateCheese(@RequestBody CheeseProductDto product){

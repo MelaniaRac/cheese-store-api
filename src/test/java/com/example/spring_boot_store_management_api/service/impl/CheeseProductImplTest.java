@@ -2,7 +2,7 @@ package com.example.spring_boot_store_management_api.service.impl;
 
 import com.example.spring_boot_store_management_api.dto.CheeseProductDto;
 import com.example.spring_boot_store_management_api.entity.CheeseProduct;
-import com.example.spring_boot_store_management_api.exception.ResourceNotFoundException;
+import com.example.spring_boot_store_management_api.exception.ProductNotFoundException;
 import com.example.spring_boot_store_management_api.mapper.CheeseProductMapper;
 import com.example.spring_boot_store_management_api.repository.CheeseProductRepository;
 import org.junit.jupiter.api.Test;
@@ -46,7 +46,7 @@ class CheeseProductImplTest {
     void findByCheeseNameThrowsExceptionWhenNotFound() {
         when(cheeseProductRepository.findByCheeseName("Bleu")).thenReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class, () -> cheeseProductService.findByCheeseName("Bleu"));
+        assertThrows(ProductNotFoundException.class, () -> cheeseProductService.findByCheeseName("Bleu"));
     }
 
     @Test
@@ -65,6 +65,6 @@ class CheeseProductImplTest {
     void deleteByStockUnitsThrowsExceptionWhenNoneDeleted() {
         when(cheeseProductRepository.deleteByStockUnits(0)).thenReturn(0L);
 
-        assertThrows(ResourceNotFoundException.class, () -> cheeseProductService.deleteByStockUnits(0));
+        assertThrows(ProductNotFoundException.class, () -> cheeseProductService.deleteByStockUnits(0));
     }
 }

@@ -12,8 +12,8 @@ public class CheeseProductMapper {
     @Mapper
     // mapStruct will create the implementation for them at compile time
     public static interface AutoCheeseProductMapper{
-        // for mapping the fields form an entity to dto, the fields have to be the same
-        // nevertheless, MapStruct has the possibility to map fields with different names
+        // for mapping the fields from an entity to dto, the fields have to be the same
+        // nevertheless, mapStruct has the possibility to map fields with different names
 
         // provides the implementation of the interface at compile time
         AutoCheeseProductMapper MAPPER = Mappers.getMapper(AutoCheeseProductMapper.class);

@@ -18,23 +18,21 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int orderId;
 
-    // field that should not be provided by end user; it should be automatically generated
-    // TODOo: modify RequestBody in createOrder OR modify OrderCreateDTO
+    // order contains a collection of orderItem elements
+    @NonNull
+    @ElementCollection // collection of value types, not entities
+    @CollectionTable(name = "ordered_items", joinColumns = @JoinColumn(name = "order_id"))
+    private List<OrderItem> orderedProducts;
+
+    @NonNull
+    private String deliveryAddress;
+
+    // TODOo field that should not be provided by end user; it should be automatically generated
     @NonNull
     private BigDecimal totalValue;
 
     // field that should not be provided by end user; it should be automatically generated
     // TODOo: modify RequestBody in createOrder OR modify OrderCreateDTO
     @NonNull
-    private LocalDate orderDate;// to be used for service function revenuePerDay
-
-    @NonNull
-    // sensitive information => not going to be in the DTO
-    private String deliveryAddress;
-
-    // order contains a collection of orderItem elements
-    @NonNull
-    @ElementCollection // collection of value types, not entities
-    @CollectionTable(name = "ordered_items", joinColumns = @JoinColumn(name = "order_id"))
-    private List<OrderItem> orderedProducts;
+    private LocalDate orderDate;// to be used for service function revenuePerDay and for order history
 }

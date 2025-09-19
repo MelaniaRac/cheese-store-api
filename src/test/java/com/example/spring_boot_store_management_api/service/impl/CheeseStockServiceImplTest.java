@@ -1,7 +1,7 @@
 package com.example.spring_boot_store_management_api.service.impl;
 
 import com.example.spring_boot_store_management_api.entity.CheeseProduct;
-import com.example.spring_boot_store_management_api.exception.ResourceNotFoundException;
+import com.example.spring_boot_store_management_api.exception.ProductNotFoundException;
 import com.example.spring_boot_store_management_api.repository.CheeseProductRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -48,6 +48,6 @@ class CheeseStockServiceImplTest {
     void checkStockThrowsResourceNotFoundWhenProductMissing() {
         when(cheeseProductRepository.findByCheeseName("Unknown")).thenReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class, () -> cheeseStockServiceImpl.checkStock("Unknown"));
+        assertThrows(ProductNotFoundException.class, () -> cheeseStockServiceImpl.checkStock("Unknown"));
     }
 }

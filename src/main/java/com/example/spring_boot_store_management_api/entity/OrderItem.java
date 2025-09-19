@@ -14,7 +14,7 @@ public class OrderItem {
     @NonNull
     private String cheeseName;
     @NonNull
-    private int units;
+    private int orderedUnits;
     @NonNull
     private BigDecimal price;
 }
