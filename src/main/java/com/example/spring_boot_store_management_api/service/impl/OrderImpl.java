@@ -44,7 +44,10 @@ public class OrderImpl implements OrderService {
             CheeseProduct product = cheeseProductRepository.findByCheeseNameIgnoreCase(item.getCheeseName())
                     .orElseThrow(() -> new ProductNotFoundException("Product", "name"));
 
+            // TODOo the user can order at least 1 unit
+
             if (item.getOrderedUnits() > product.getStockUnits()){
+                // only one outOfStock error per product is shown at a time
                 throw new OutOfStockException(
                         // TODOo the equal case not correctly treated
                         product.getCheeseName()

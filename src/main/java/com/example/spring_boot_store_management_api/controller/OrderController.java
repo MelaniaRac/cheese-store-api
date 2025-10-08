@@ -26,6 +26,7 @@ public class OrderController {
     private OrderService orderService;
 
     // http://localhost:2028/orders/create
+    // TODOo add customer entity and define create/customers/{customerId/orders}
     @PostMapping("create")
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)

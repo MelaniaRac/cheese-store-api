@@ -12,8 +12,7 @@ public class ProductNotFoundException extends RuntimeException{
     private String fieldName; // resource element of interest to the user
     //private String fieldValue; // the value of the resource element
 
-    // less detail in the error message for security reasons: eliminated fieldValue
-    // TODOo:
+    // eliminated fieldValue for less detail in the error message - security reasons
     public ProductNotFoundException(String resourceName, String fieldName){
         super(String.format("%s not found with given %s.", resourceName, fieldName));
     }

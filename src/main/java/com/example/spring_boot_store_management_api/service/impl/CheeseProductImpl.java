@@ -6,11 +6,17 @@ import com.example.spring_boot_store_management_api.exception.ProductNotFoundExc
 import com.example.spring_boot_store_management_api.mapper.CheeseProductMapper;
 import com.example.spring_boot_store_management_api.repository.CheeseProductRepository;
 import com.example.spring_boot_store_management_api.service.CheeseProductService;
+import jakarta.validation.constraints.Null;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.BeanWrapper;
+import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.beans.PropertyDescriptor;
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -28,7 +34,7 @@ public class CheeseProductImpl implements CheeseProductService {
         // check if a cheese with the same name already exists
         boolean exists = cheeseProductRepository.findByCheeseNameIgnoreCase(cheeseProductDto.getCheeseName()).isPresent();
         if (exists) {
-            // "TODOo" replace it with "Duplicate entry" to not be misleading
+            // "TODOo" replace it with "Product cannot be created" to not be misleading
             throw new ProductNotFoundException("Product", "name. Product already exists.");
         }
         // "TODOo" @Positive validation for price and stockUnits
@@ -81,26 +87,23 @@ public class CheeseProductImpl implements CheeseProductService {
     @Override
     // Jackson parses the JSON to the DTO object, matches the JSON keys to the DTO's
     // then, it populates the DTO and sends it to this function
-    public CheeseProductDto updateProductByPrice(CheeseProductDto productDto) {
-        var productSearched = cheeseProductRepository.findByCheeseNameIgnoreCase(productDto.getCheeseName()).orElseThrow(
-                () -> new ProductNotFoundException("Product", "name")
+    public CheeseProductDto patchProduct(String cheeseName, CheeseProductDto productDto) {
+        var productEntity = cheeseProductRepository.findByCheeseNameIgnoreCase(cheeseName)
+                .orElseThrow( () -> new ProductNotFoundException("Product", "name")
                 );
 
-        // "TODOo" @Positive validation for price and stockUnits
-        // "TODOo" update price without being allowed to update cheese name and stock Units at the same time
-//        // Only the price can be changed
-//        if (productSearched.getCheeseName() != productDto.getCheeseName()) {
-//            throw new InvalidUpdateException("You cannot change the cheese name. Only the price can be changed.");
-//        }
-//        if (productSearched.getStockUnits() != productDto.getStockUnits()) {
-//            throw new InvalidUpdateException("You cannot change the stock units. Only the price can be changed.");
-//        }
+        // built-in utility instead of checking if every field is defined
+        final BeanWrapper source = new BeanWrapperImpl(productDto);
 
-        // the set method should be used only in the controller layer
-        productSearched.setRetailPrice(productDto.getRetailPrice());
-        var productPriceUpdatedSaved = cheeseProductRepository.save(productSearched);
+        String[] nullPropertyNames = Arrays.stream(source.getPropertyDescriptors()).map(PropertyDescriptor::getName)
+                .filter(name -> source.getPropertyValue(name) == null)
+                        .toArray(String[]::new);
 
-        return CheeseProductMapper.AutoCheeseProductMapper.MAPPER.mapToCheeseProductDto(productPriceUpdatedSaved);
+        BeanUtils.copyProperties(productDto, productEntity, nullPropertyNames);
+        //
+        System.out.println(productEntity);
+        return CheeseProductMapper.AutoCheeseProductMapper.MAPPER
+                .mapToCheeseProductDto(cheeseProductRepository.save(productEntity));
     }
 
 

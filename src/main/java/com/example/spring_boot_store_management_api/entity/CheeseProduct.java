@@ -32,9 +32,9 @@ public class CheeseProduct {
     @Column(nullable = false)
     //@Column(name = "nameYouWant", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY) // IDENTITY strategy relies on the db auto-increment column
-    private int cheeseId;
+    private Long cheeseId;
 
-    @Column(nullable = false) // ?? nullable vs NonNull
+    @Column(nullable = false) // ?? nullable vs NonNull TODOo
     private String cheeseName; // String not allowed for auto_increment in MySQL => cannot use INCREMENT
 
     @Column(nullable = false)

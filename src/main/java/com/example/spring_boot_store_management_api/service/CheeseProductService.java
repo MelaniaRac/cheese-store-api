@@ -32,9 +32,8 @@ public interface CheeseProductService {
      * @param product to update
      * @return product with new price or no modification if none found
      */
-
-    // TODOo why not declared in repository as well?
-    CheeseProductDto updateProductByPrice(CheeseProductDto product);
+// TODOo having cheesename just because it's a good REST practice to separate the body from the resource identifier?
+    CheeseProductDto patchProduct(String cheeseName, CheeseProductDto product);
 
 
     /**

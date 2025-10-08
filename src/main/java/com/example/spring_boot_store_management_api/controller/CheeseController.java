@@ -5,6 +5,7 @@ import com.example.spring_boot_store_management_api.entity.CheeseProduct;
 import com.example.spring_boot_store_management_api.repository.CheeseProductRepository;
 import com.example.spring_boot_store_management_api.service.CheeseProductService;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -16,7 +17,7 @@ import java.util.List;
 
 @RestController
 // define base URL for defining the other REST APIs
-@RequestMapping("cheese")
+@RequestMapping("cheeses")
 @AllArgsConstructor
 public class CheeseController {
 
@@ -25,6 +26,7 @@ public class CheeseController {
 //    http://localhost:2028/cheese/create
     // build create cheese product REST API
     @PostMapping("create")
+    @PreAuthorize("hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<CheeseProductDto> createCheeseProduct(@RequestBody CheeseProductDto cheeseProductDto){
         CheeseProductDto productAdded = cheeseProductService.createCheeseProduct(cheeseProductDto);
@@ -36,7 +38,7 @@ public class CheeseController {
     // build get product by cheeseName
     @GetMapping("{name}")
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
-    public ResponseEntity<CheeseProductDto> findByCheeseName(@PathVariable("name") String cheeseName){
+    public ResponseEntity<CheeseProductDto> findCheese(@PathVariable("name") String cheeseName){
         CheeseProductDto productSearchedDto = cheeseProductService.findCheese(cheeseName);
 
         return new ResponseEntity<>(productSearchedDto, HttpStatus.OK);
@@ -56,22 +58,24 @@ public class CheeseController {
     }
 
     //    http://localhost:2028/cheese
-    // build update price of chosen product
-    @PutMapping
+    // update one or more fields for cheeseProduct
+    @PatchMapping("partialUpdate/{productName}")
     @PreAuthorize("hasRole('ADMIN')")
     // eliminated cheeseName path variable to not risk confusion if the following corner case applies:
     // the user could write name=A in the http request and name=b in the JSON body
-    public ResponseEntity<CheeseProductDto> updateCheese(@RequestBody CheeseProductDto product){
-        product.setRetailPrice(product.getRetailPrice());
-        CheeseProductDto productUpdated = cheeseProductService.updateProductByPrice(product);
+    public ResponseEntity<CheeseProductDto> patchCheeseProduct(@PathVariable("productName") String cheeseName,
+                                                                   @RequestBody CheeseProductDto productDto){
 
-        return new ResponseEntity<>(productUpdated, HttpStatus.OK);
+        CheeseProductDto productFieldsUpdated = cheeseProductService.patchProduct(cheeseName, productDto);
+
+        return new ResponseEntity<>(productFieldsUpdated, HttpStatus.OK);
     }
 
 
     // build delete product REST API
     @DeleteMapping("{stockUnits}")
     @PreAuthorize("hasRole('ADMIN')")
+    // TODOo shouldn't the REST endpoint be with query as well?
     public ResponseEntity<String> deleteByStockUnits(@PathVariable("stockUnits") Integer stockUnits){
         long numberDeletedProducts = cheeseProductService.deleteByStockUnits(stockUnits);
 

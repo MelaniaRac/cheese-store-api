@@ -17,10 +17,12 @@ public class CheeseProductDto {
     // don't use sensitive information in the DTO
 
     // no reason to contain JPA annotations, as the DTO does not communicate w/ the db
-        private int cheeseId;
-        @NonNull private String cheeseName;
-        @NonNull private BigDecimal retailPrice;
-        @NonNull private int stockUnits;
+        private Long cheeseId;
+        private String cheeseName;
+        private BigDecimal retailPrice;
+        private int stockUnits;
         // to treat warnings related to service layer logic, IF any
         private String warningMessage;
+
+    // "TODOo" @Positive validation for price and stockUnits
 }
