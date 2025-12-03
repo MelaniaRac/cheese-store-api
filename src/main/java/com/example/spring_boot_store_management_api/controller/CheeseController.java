@@ -5,6 +5,7 @@ import com.example.spring_boot_store_management_api.entity.CheeseProduct;
 import com.example.spring_boot_store_management_api.repository.CheeseProductRepository;
 import com.example.spring_boot_store_management_api.service.CheeseProductService;
 import lombok.AllArgsConstructor;
+import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +29,7 @@ public class CheeseController {
     @PostMapping("create")
     @PreAuthorize("hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<CheeseProductDto> createCheeseProduct(@RequestBody CheeseProductDto cheeseProductDto){
+    public ResponseEntity<CheeseProductDto> createCheeseProduct(@Valid @RequestBody CheeseProductDto cheeseProductDto){
         CheeseProductDto productAdded = cheeseProductService.createCheeseProduct(cheeseProductDto);
 
         return new ResponseEntity<>(productAdded, HttpStatus.CREATED);
@@ -63,7 +64,7 @@ public class CheeseController {
     @PreAuthorize("hasRole('ADMIN')")
     // eliminated cheeseName path variable to not risk confusion if the following corner case applies:
     // the user could write name=A in the http request and name=b in the JSON body
-    public ResponseEntity<CheeseProductDto> patchCheeseProduct(@PathVariable("productName") String cheeseName,
+    public ResponseEntity<CheeseProductDto> patchCheeseProduct(@Valid @PathVariable("productName") String cheeseName,
                                                                    @RequestBody CheeseProductDto productDto){
 
         CheeseProductDto productFieldsUpdated = cheeseProductService.patchProduct(cheeseName, productDto);
@@ -75,7 +76,10 @@ public class CheeseController {
     // build delete product REST API
     @DeleteMapping("{stockUnits}")
     @PreAuthorize("hasRole('ADMIN')")
-    // TODOo shouldn't the REST endpoint be with query as well?
+    // TODOo shouldn't the REST endpoint be with query?
+    // TODOo validation
+    // TODOo the end users should still have access to the possible products - grey them out with "out of stock"
+    // AC: store owner wants to be able to delete
     public ResponseEntity<String> deleteByStockUnits(@PathVariable("stockUnits") Integer stockUnits){
         long numberDeletedProducts = cheeseProductService.deleteByStockUnits(stockUnits);
 

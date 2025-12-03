@@ -106,6 +106,7 @@ public class CheeseProductImpl implements CheeseProductService {
                 .mapToCheeseProductDto(cheeseProductRepository.save(productEntity));
     }
 
+    // TODOo updateEntireProduct (all fields have to be mentioned)
 
     @Override
     public long deleteByStockUnits(Integer stockUnits) {

@@ -16,6 +16,7 @@ public class Order {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    // "int" type is dangerous for PATCH (bc default = 0) and Integer wouldn't provide as many unique ids as Long
     private Long orderId;
 
     // order contains a collection of orderItem elements
