@@ -27,11 +27,10 @@ import java.math.BigDecimal;
        })
 
 public class CheeseProduct {
-    //@NonNull
     @Id
     @Column(nullable = false)
-    //@Column(name = "nameYouWant", nullable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // IDENTITY strategy relies on the db auto-increment column
+    // IDENTITY strategy relies on the db auto-increment column
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long cheeseId;
 
     @Column(nullable = false) // ?? nullable vs NonNull TODOo

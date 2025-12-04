@@ -35,7 +35,7 @@ public class CheeseProductImpl implements CheeseProductService {
         boolean exists = cheeseProductRepository.findByCheeseNameIgnoreCase(cheeseProductDto.getCheeseName()).isPresent();
         if (exists) {
             // "TODOo" replace it with "Product cannot be created" to not be misleading
-            throw new ProductNotFoundException("Product", "name. Product already exists.");
+            throw new ProductNotFoundException("Product", "name. /  Product already exists.");
         }
         // "TODOo" @Positive validation for price and stockUnits
         // "TODOo" make sure the name is not empty

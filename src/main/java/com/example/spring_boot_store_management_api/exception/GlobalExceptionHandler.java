@@ -1,6 +1,11 @@
 package com.example.spring_boot_store_management_api.exception;
 
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import com.fasterxml.jackson.databind.exc.MismatchedInputException;
+import jakarta.servlet.http.HttpServletRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -18,7 +23,28 @@ import java.util.stream.Collectors;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
+    private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
     // @ExceptionHandler methods are called by Spring via reflection
+
+    // deserialization verification (before validation)
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ErrorDetails> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex, HttpServletRequest request) {
+
+        // for debugging
+//        Throwable root = ex.getMostSpecificCause();
+//        log.warn("JSON type/structure error", root);
+
+        ErrorDetails errorDetails = new ErrorDetails(
+                LocalDateTime.now(),
+                ex.getMessage(),
+                //webRequest.getDescription(false),
+                "INPUT_INVALID"
+        );
+
+        return new ResponseEntity<>(errorDetails, HttpStatus.UNPROCESSABLE_ENTITY);
+    }
+
     @ExceptionHandler(ProductNotFoundException.class)
     public ResponseEntity<ErrorDetails> handleProductNotFoundException(ProductNotFoundException exception, WebRequest webRequest){
 
@@ -33,44 +59,17 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
     }
 
+    // TODOo: check the difference between this design and the below one
     @ExceptionHandler(OutOfStockException.class)
     public ResponseEntity<ErrorDetails> handleOutOfStockException(OutOfStockException exception, WebRequest webRequest){
 
         ErrorDetails errorDetails = new ErrorDetails(
                 LocalDateTime.now(),
                 exception.getMessage(),
-                //webRequest.getDescription(false),
-                // TODOo: check difference between this design and the below one
                 "ORDERED_UNITS_EXCEED_STOCK"
         );
 
         return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
     }
 
-    // check if input values mismatch the expected type
-    // TODOo works only for retailPrice
-    @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<Map<String, String>> handleInputMappingException(HttpMessageNotReadableException ex) {
-        Map<String, String> errors = new HashMap<>();
-
-        // Try to determine the exact field that caused the issue from the Jackson exception stack
-        if (ex.getCause() instanceof JsonMappingException) {
-            JsonMappingException mappingException = (JsonMappingException) ex.getCause();
-
-            // Extract the field name from the exception path reference
-            String fieldName = mappingException.getPath().stream()
-                    .map(JsonMappingException.Reference::getFieldName)
-                    .collect(Collectors.joining("."));
-
-            // Provide a specific error message for that field
-            errors.put(fieldName, "Invalid input format or type mismatch.");
-
-        } else {
-            // Fallback for general unreadable messages if field extraction fails
-            errors.put("general", "Malformed JSON request. Check data types.");
-        }
-
-        return new ResponseEntity<>(errors, HttpStatus.UNPROCESSABLE_ENTITY);
-    }
-
-    }
+}

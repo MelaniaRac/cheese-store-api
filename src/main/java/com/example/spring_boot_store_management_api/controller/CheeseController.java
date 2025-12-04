@@ -60,9 +60,10 @@ public class CheeseController {
 
     //    http://localhost:2028/cheese
     // update one or more fields for cheeseProduct
+    // TODOo does the endpoint respect REST best practices?
     @PatchMapping("partialUpdate/{productName}")
     @PreAuthorize("hasRole('ADMIN')")
-    // eliminated cheeseName path variable to not risk confusion if the following corner case applies:
+    // ?TODOo: eliminate cheeseName path variable to not risk confusion if the following case applies:
     // the user could write name=A in the http request and name=b in the JSON body
     public ResponseEntity<CheeseProductDto> patchCheeseProduct(@Valid @PathVariable("productName") String cheeseName,
                                                                    @RequestBody CheeseProductDto productDto){
@@ -73,7 +74,7 @@ public class CheeseController {
     }
 
 
-    // build delete product REST API
+    // delete product REST API
     @DeleteMapping("{stockUnits}")
     @PreAuthorize("hasRole('ADMIN')")
     // TODOo shouldn't the REST endpoint be with query?
