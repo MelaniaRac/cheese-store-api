@@ -4,7 +4,10 @@ import com.example.spring_boot_store_management_api.dto.CheeseProductDto;
 import com.example.spring_boot_store_management_api.entity.CheeseProduct;
 import com.example.spring_boot_store_management_api.repository.CheeseProductRepository;
 import com.example.spring_boot_store_management_api.service.CheeseProductService;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AllArgsConstructor;
+import jakarta.validation.Valid;
+import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -16,7 +19,7 @@ import java.util.List;
 
 @RestController
 // define base URL for defining the other REST APIs
-@RequestMapping("cheese")
+@RequestMapping("cheeses")
 @AllArgsConstructor
 public class CheeseController {
 
@@ -25,20 +28,20 @@ public class CheeseController {
 //    http://localhost:2028/cheese/create
     // build create cheese product REST API
     @PostMapping("create")
-    @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<CheeseProductDto> createCheeseProduct(@RequestBody CheeseProductDto cheeseProductDto){
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<CheeseProductDto> createCheeseProduct(@Valid @RequestBody CheeseProductDto cheeseProductDto){
         CheeseProductDto productAdded = cheeseProductService.createCheeseProduct(cheeseProductDto);
 
         return new ResponseEntity<>(productAdded, HttpStatus.CREATED);
     }
 
 //    http://localhost:2028/cheese/Chabichou
-    // build get product by CheeseName
+    // build get product by cheeseName
     @GetMapping("{name}")
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
-    public ResponseEntity<CheeseProductDto> findByCheeseName(@PathVariable("name") String cheeseName){
-        CheeseProductDto productSearchedDto = cheeseProductService.findByCheeseName(cheeseName);
+    public ResponseEntity<CheeseProductDto> findCheese(@PathVariable("name") String cheeseName){
+        CheeseProductDto productSearchedDto = cheeseProductService.findCheese(cheeseName);
 
         return new ResponseEntity<>(productSearchedDto, HttpStatus.OK);
     }
@@ -46,38 +49,42 @@ public class CheeseController {
 
 //     http//localhost:2028/cheese/stockUnits/retailPrice
     // build get products by stock units and price REST API
+    // TODOo : make the URL using query parameters
     @GetMapping("{stockUnits}/{retailPrice}")
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
-    public ResponseEntity<List<CheeseProductDto>> findByStockUnitsAndRetailPriceLessThan(@PathVariable int stockUnits,
-                                                                                      @PathVariable BigDecimal retailPrice){
-        List<CheeseProductDto> productsSearched= cheeseProductService.findByStockUnitsAndRetailPriceLessThan(stockUnits, retailPrice);
+    public ResponseEntity<List<CheeseProductDto>> findByStockUnitsAndRetailPriceLessThan(Integer stockUnits,
+                                                                                      BigDecimal retailPrice){
+        List<CheeseProductDto> productsSearched= cheeseProductService.findByStockUnitsAndRetailPriceLessThan((Integer) stockUnits, (BigDecimal) retailPrice);
 
         return new ResponseEntity<>(productsSearched, HttpStatus.OK);
     }
 
     //    http://localhost:2028/cheese
-    // build update price of chosen product
-    @PutMapping
-    @PreAuthorize("hasAnyRole('ADMIN')")
-    // eliminated cheeseName path variable to not risk confusion if the following corner case applies:
-    // the user could write name=A in the http request and name=b in the JSON body
-    public ResponseEntity<CheeseProductDto> updateCheese(@RequestBody CheeseProductDto product){
-        product.setRetailPrice(product.getRetailPrice());
-        CheeseProductDto productUpdated = cheeseProductService.updateProductByPrice(product);
-
-        return new ResponseEntity<>(productUpdated, HttpStatus.OK);
-    }
-
-
-    // build delete product REST API
-    @DeleteMapping("{stockUnits}")
+    // update one or more fields for cheeseProduct
+    // TODOo does the endpoint respect REST best practices?
+    @PatchMapping("partialUpdate/{productName}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<String> deleteByStockUnits(@PathVariable("stockUnits") Integer stockUnits){
-        long numberDeletedProducts = cheeseProductService.deleteByStockUnits(stockUnits);
+    // ?TODOo: eliminate cheeseName path variable to not risk confusion if the following case applies:
+    // the user could write name=A in the http request and name=b in the JSON body
+    public ResponseEntity<CheeseProductDto> patchCheeseProduct(@Valid @PathVariable("productName") String cheeseName,
+                                                                   @Valid @RequestBody CheeseProductDto productDto){
 
-        return new ResponseEntity<>("Products out of stock were deleted:", HttpStatus.OK);
+        CheeseProductDto productFieldsUpdated = cheeseProductService.patchProduct(cheeseName, productDto);
+
+        return new ResponseEntity<>(productFieldsUpdated, HttpStatus.OK);
     }
 
-    // custom exceptions related to the controller can also be handled inside the controller layer
+
+    // Endpoint: DELETE /cheeses?stockUnits=intValue
+//    @DeleteMapping
+//    @PreAuthorize("hasRole('ADMIN')")
+//    public ResponseEntity<String> deleteByStockUnits(@RequestParam @PositiveOrZero Integer stockUnits){
+//        long numberDeletedProducts = cheeseProductService.deleteByStockUnits(stockUnits);
+//
+//        return new ResponseEntity<>("Products with stock value " + stockUnits, HttpStatus.OK);
+//    }
+
+
+    // TODOo custom exceptions related to the controller can also be handled inside the controller layer
     // ex: different error formats can make it easier to localize the logic.
 }

@@ -23,7 +23,7 @@ public interface CheeseProductService {
      * @param cheeseName name to search for
      * @return matching product or empty if none found
      */
-    CheeseProductDto findByCheeseName(String cheeseName);
+    CheeseProductDto findCheese(String cheeseName);
 
 
     /**
@@ -32,7 +32,8 @@ public interface CheeseProductService {
      * @param product to update
      * @return product with new price or no modification if none found
      */
-    CheeseProductDto updateProductByPrice(CheeseProductDto product);
+// TODOo having only cheeseName because it's a good REST practice to separate the body from the resource identifier?
+    CheeseProductDto patchProduct(String cheeseName, CheeseProductDto product);
 
 
     /**
@@ -45,10 +46,10 @@ public interface CheeseProductService {
     List<CheeseProductDto> findByStockUnitsAndRetailPriceLessThan(int stockUnits, BigDecimal retailPrice);
 
 
-    /**
-     * Deletes all products whose stockUnits equals a given value.
-     * @param stockUnits number pf stock units
-     * @return number of deleted products
-     */
-    long deleteByStockUnits(Integer stockUnits);
+//    /**
+//     * Deletes all products whose stockUnits equals a given value.
+//     * @param stockUnits number pf stock units
+//     * @return number of deleted products
+//     */
+//    long deleteByStockUnits(Integer stockUnits);
 }

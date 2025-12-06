@@ -9,7 +9,8 @@ import java.math.BigDecimal;
 //@Setter
 //@EqualsAndHashCode
 @NoArgsConstructor()
-@RequiredArgsConstructor
+//@RequiredArgsConstructor was commented because it gives the same result
+// as @NonArgsConstructor when there is no @NonNull verification
 //@AllArgsConstructor
 @ToString(includeFieldNames = false)
 @Data
@@ -26,22 +27,17 @@ import java.math.BigDecimal;
        })
 
 public class CheeseProduct {
-    //@NonNull
     @Id
     @Column(nullable = false)
-    //@Column(name = "nameYouWant", nullable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // IDENTITY strategy relies on the db auto-increment column
-    private int cheeseId;
+    // IDENTITY strategy relies on the db auto-increment column
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long cheeseId;
 
-    @NonNull
-    @Column(nullable = false)
+    @Column(nullable = false) // ?? nullable vs NonNull TODOo
     private String cheeseName; // String not allowed for auto_increment in MySQL => cannot use INCREMENT
 
-    @NonNull
     @Column(nullable = false)
     private BigDecimal retailPrice;
 
-    @NonNull
     private int stockUnits;
-
 }

@@ -11,6 +11,10 @@ This project is a Spring Boot REST API for managing cheese products. It demonstr
 - Example JUnit tests using Mockito
 - Warnings, other security-related features
 
+## Business requirements
+- If a product reaches stock=0, it remains in the database - only the admin can choose to remove it from the db
+
+
 ## Requirements
 
 - Java 17
@@ -60,7 +64,7 @@ JUnit tests with Mockito cover service and stock logic.
 
 ## Future Work
 
-- Introduce an `Order` entity to capture purchases of cheese products, including
+- Work in Progress (see latest commits): Introduce an `Order` entity to capture purchases of cheese products, including
   quantity, order date and total cost + service method for sales/day
 
 ## Resources
