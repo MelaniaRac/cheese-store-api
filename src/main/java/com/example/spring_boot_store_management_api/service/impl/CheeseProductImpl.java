@@ -51,7 +51,7 @@ public class CheeseProductImpl implements CheeseProductService {
         var stockWarning = cheeseStockServiceImpl.checkStock(savedCheeseProductDto.getCheeseName());
 
         if ("restock".equalsIgnoreCase(String.valueOf(stockWarning))){
-            savedCheeseProductDto.setWarningMessage("⚠️ Warning: Stock is low. Consider restocking.");
+            savedCheeseProductDto.setLowStockWarning("⚠️ Warning: Stock is low. Consider restocking.");
         }
 
         return savedCheeseProductDto;
@@ -106,16 +106,14 @@ public class CheeseProductImpl implements CheeseProductService {
                 .mapToCheeseProductDto(cheeseProductRepository.save(productEntity));
     }
 
-    // TODOo updateEntireProduct (all fields have to be mentioned)
-
-    @Override
-    public long deleteByStockUnits(Integer stockUnits) {
-        var numberDeletedRows = cheeseProductRepository.deleteByStockUnits(stockUnits);
-
-        if (numberDeletedRows == 0) {
-            throw new ProductNotFoundException("Product", "stock units.");
-        }
-
-        return numberDeletedRows;
-    }
+//    @Override
+//    public long deleteByStockUnits(Integer stockUnits) {
+//        var numberDeletedRows = cheeseProductRepository.deleteByStockUnits(stockUnits);
+//
+//        if (numberDeletedRows == 0) {
+//            throw new ProductNotFoundException("Product", "stock units.");
+//        }
+//
+//        return numberDeletedRows;
+//    }
 }

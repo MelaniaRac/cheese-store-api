@@ -4,6 +4,7 @@ import com.example.spring_boot_store_management_api.dto.CheeseProductDto;
 import com.example.spring_boot_store_management_api.entity.CheeseProduct;
 import com.example.spring_boot_store_management_api.repository.CheeseProductRepository;
 import com.example.spring_boot_store_management_api.service.CheeseProductService;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AllArgsConstructor;
 import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
@@ -66,7 +67,7 @@ public class CheeseController {
     // ?TODOo: eliminate cheeseName path variable to not risk confusion if the following case applies:
     // the user could write name=A in the http request and name=b in the JSON body
     public ResponseEntity<CheeseProductDto> patchCheeseProduct(@Valid @PathVariable("productName") String cheeseName,
-                                                                   @RequestBody CheeseProductDto productDto){
+                                                                   @Valid @RequestBody CheeseProductDto productDto){
 
         CheeseProductDto productFieldsUpdated = cheeseProductService.patchProduct(cheeseName, productDto);
 
@@ -74,19 +75,16 @@ public class CheeseController {
     }
 
 
-    // delete product REST API
-    @DeleteMapping("{stockUnits}")
-    @PreAuthorize("hasRole('ADMIN')")
-    // TODOo shouldn't the REST endpoint be with query?
-    // TODOo validation
-    // TODOo the end users should still have access to the possible products - grey them out with "out of stock"
-    // AC: store owner wants to be able to delete
-    public ResponseEntity<String> deleteByStockUnits(@PathVariable("stockUnits") Integer stockUnits){
-        long numberDeletedProducts = cheeseProductService.deleteByStockUnits(stockUnits);
+    // Endpoint: DELETE /cheeses?stockUnits=intValue
+//    @DeleteMapping
+//    @PreAuthorize("hasRole('ADMIN')")
+//    public ResponseEntity<String> deleteByStockUnits(@RequestParam @PositiveOrZero Integer stockUnits){
+//        long numberDeletedProducts = cheeseProductService.deleteByStockUnits(stockUnits);
+//
+//        return new ResponseEntity<>("Products with stock value " + stockUnits, HttpStatus.OK);
+//    }
 
-        return new ResponseEntity<>("Products out of stock were deleted:", HttpStatus.OK);
-    }
 
-    // custom exceptions related to the controller can also be handled inside the controller layer
+    // TODOo custom exceptions related to the controller can also be handled inside the controller layer
     // ex: different error formats can make it easier to localize the logic.
 }

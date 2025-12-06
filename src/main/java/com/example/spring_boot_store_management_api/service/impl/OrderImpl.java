@@ -37,19 +37,15 @@ public class OrderImpl implements OrderService {
         order.setDeliveryAddress(order.getDeliveryAddress());
 
         for (var item : order.getOrderedProducts()) {
-            // the 'might throw NullPointer' for findCheeseName is IDE-level caution, not compiler error
-            // TODOo: is it a better practice to look by id instead of cheeseName
-            // -> faster DB search, names are not necessarily unique
-            // after I create the front end that translates names into IDs
+            // TODOo: is it a better practice to look by id instead of cheeseName ? -> faster DB search
             CheeseProduct product = cheeseProductRepository.findByCheeseNameIgnoreCase(item.getCheeseName())
                     .orElseThrow(() -> new ProductNotFoundException("Product", "name"));
 
-            // TODOo the user can order at least 1 unit
-
-            if (item.getOrderedUnits() > product.getStockUnits()){
+            // TODOo : use it in a try catch
+            if (item.getOrderedUnits() >= product.getStockUnits()){
                 // only one outOfStock error per product is shown at a time
                 throw new OutOfStockException(
-                        // TODOo the equal case not correctly treated
+                        // TODOo check the equal case
                         product.getCheeseName()
                 );
             }

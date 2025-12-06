@@ -59,7 +59,6 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
     }
 
-    // TODOo: check the difference between this design and the below one
     @ExceptionHandler(OutOfStockException.class)
     public ResponseEntity<ErrorDetails> handleOutOfStockException(OutOfStockException exception, WebRequest webRequest){
 
